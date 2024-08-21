@@ -1,0 +1,51 @@
+policies:
+  - name: ec2_iam_instance_profile_not_set
+    resource: terraform.aws_instance
+    metadata:
+      category: task 1
+    filters:
+    - not:
+      - type: value
+        key: iam_instance_profile
+        value: not-null
+      - type: traverse
+        resources: aws_iam_instance_profile
+        attrs: 
+          - type: value 
+            key: role
+            value: present
+
+  - name: iam_role_exists_check
+    resource: terraform.aws_iam_role
+    filters: 
+      - type: value 
+        value_type: resource_count
+        op: lt
+        value: 1
+
+  - name: iam_role_check
+    resource: terraform.aws_iam_role
+    filters:
+    - not:
+      - type: value
+        key: assume_role_policy
+        op: regex
+        value: "^(.|\n)*Effect\\\": ?\\\"Allow\\\"(.|\n)*$"
+      - type: value
+        key: assume_role_policy
+        op: regex
+        value: "^(.|\n)*Principal\\\": ?\\{\\\"Service\\\": ?\\[?\\\"ec2.amazonaws.com\\\"\\]?\\}(.|\n)*$"
+      - type: value
+        key: assume_role_policy
+        op: regex
+        value: "^(.|\n)*Action\\\": ?\\[?\\\"sts:AssumeRole\\\"\\]?(.|\n)*$"
+
+  - name: iam_instance_profile_attachment_check
+    resource: terraform.aws_iam_role_policy_attachment
+    metadata:
+      category: task 1
+    filters:
+      - not:
+        - type: value
+          key: policy_arn
+          value: arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore

@@ -1,0 +1,17 @@
+name: test-custodian
+on: [push, pull_request]
+jobs:
+  validate_tf:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Validate terraform config
+        run: |
+          pip install --upgrade pip
+          python3.10 -m venv .venv
+          source .venv/bin/activate
+          pip install c7n-left
+          c7n-left run -p policies  -d tf
+
+    
