@@ -1,7 +1,7 @@
 name: test-custodian
 on: [push, pull_request]
 jobs:
-  validate_tf:
+  validate_terraform:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
