@@ -25,6 +25,8 @@ policies:
 
   - name: iam_role_check
     resource: terraform.aws_iam_role
+    metadata:
+      severity: high
     filters:
     - not:
       - type: value
