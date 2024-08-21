@@ -7,16 +7,15 @@ resource "aws_instance" "this" {
   tags = {
     Name = "222_instance_red3"
   }
-
   depends_on = [aws_security_group.this, aws_iam_instance_profile.this]
 }
 
 data "aws_ami" "this" {
   most_recent = true
   owners      = ["amazon"]
-  
   filter {
     name = "name"
 	values = ["amzn2-ami-hvm*"]
   }
+  
 }
